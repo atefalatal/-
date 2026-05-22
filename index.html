@@ -3,76 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامجي اليومي</title>
+    <title>برنامج الـ 90 يوماً للمقاومة والتغذية</title>
     <style>
-        body { background-color: #121214; color: #ffffff; font-family: sans-serif; padding: 20px; }
-        h2 { color: #ccff00; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .item { background: #1c1c1f; padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        body { background-color: #121214; color: #ffffff; font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        h2 { color: #ccff00; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 5px; }
+        .progress-header { background: #1e1e22; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+        .day-counter { color: #ccff00; font-size: 24px; }
+        .level-badge { background: #ff66a3; color: white; padding: 3px 8px; border-radius: 5px; font-size: 12px; margin-right: 10px; display: inline-block; }
+        .item { background: #1c1c1f; padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #333; }
+        .item.completed { border-left-color: #ccff00; opacity: 0.8; }
         .text-section { display: flex; flex-direction: column; }
-        .title { font-weight: bold; font-size: 18px; }
+        .title { font-weight: bold; font-size: 17px; }
         .details { color: #ff66a3; font-size: 14px; margin-top: 5px; }
         .green-text { color: #00ffcc; }
-        input[type="checkbox"] { width: 25px; height: 25px; accent-color: #ccff00; }
+        input[type="checkbox"] { width: 26px; height: 26px; accent-color: #ccff00; cursor: pointer; }
+        .btn-submit { background: #ccff00; color: #121214; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; display: block; }
+        .btn-submit:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .success-msg { text-align: center; color: #00ffcc; font-size: 20px; margin-top: 40px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
-    <h2>التمارين الرياضية (من الجلوس)</h2>
-    
-    <div class="item">
-        <div class="text-section">
-            <span class="title">Bicep Curls (بايسبس)</span>
-            <span class="details">3 مجموعات × 12 تكرار <span class="green-text">| راحة 45 ث</span></span>
+    <div id="main-app">
+        <div class="progress-header">
+            تقدم الجلسات: الجلسة <span class="day-counter" id="current-day">1</span> من 90
+            <br>
+            <span class="level-badge" id="level-text">المستوى 1: التأسيس</span>
         </div>
-        <input type="checkbox">
-    </div>
 
-    <div class="item">
-        <div class="text-section">
-            <span class="title">Shoulder Press (أكتاف)</span>
-            <span class="details">3 مجموعات × 10 تكرارات <span class="green-text">| راحة 45 ث</span></span>
+        <h2>التمارين الرياضية (من الجلوس)</h2>
+        <div id="exercises-container"></div>
+
+        <h2>المهام الغذائية اليومية</h2>
+        <div class="item">
+            <div class="text-section"><span class="title">بيضة مسلوقة كاملة</span></div>
+            <input type="checkbox" class="task-check" onchange="checkProgress()">
         </div>
-        <input type="checkbox">
-    </div>
-
-    <div class="item">
-        <div class="text-section">
-            <span class="title">Seated Leg Extensions (الأفخاذ)</span>
-            <span class="details">3 مجموعات × 12 تكرار <span class="green-text">| راحة 45 ث</span></span>
+        <div class="item">
+            <div class="text-section"><span class="title">ملعقة زيت زيتون كبيرة</span></div>
+            <input type="checkbox" class="task-check" onchange="checkProgress()">
         </div>
-        <input type="checkbox">
-    </div>
-
-    <div class="item">
-        <div class="text-section">
-            <span class="title">Glute Squeezes (الجلوتس)</span>
-            <span class="details">3 مجموعات × 15 تكرار <span class="green-text">| ثبات 3 ثوانٍ</span></span>
+        <div class="item">
+            <div class="text-section"><span class="title">ثمرة فاكهة طازجة</span></div>
+            <input type="checkbox" class="task-check" onchange="checkProgress()">
         </div>
-        <input type="checkbox">
+        <div class="item">
+            <div class="text-section"><span class="title">وجبة بقوليات (فول / ترمس / مكسرات)</span></div>
+            <input type="checkbox" class="task-check" onchange="checkProgress()">
+        </div>
+        <div class="item">
+            <div class="text-section"><span class="title">كوب لبن رايب</span></div>
+            <input type="checkbox" class="task-check" onchange="checkProgress()">
+        </div>
+
+        <button class="btn-submit" id="submit-btn" onclick="nextDay()" disabled>إكمال الجلسة والانتقال لليوم التالي</button>
     </div>
 
-    <h2>المهام الغذائية اليومية</h2>
-
-    <div class="item">
-        <div class="text-section"><span class="title">بيضة مسلوقة</span></div>
-        <input type="checkbox">
-    </div>
-    <div class="item">
-        <div class="text-section"><span class="title">ملعقة زيت زيتون كبيرة</span></div>
-        <input type="checkbox">
-    </div>
-    <div class="item">
-        <div class="text-section"><span class="title">ثمرة فاكهة</span></div>
-        <input type="checkbox">
-    </div>
-    <div class="item">
-        <div class="text-section"><span class="title">وجبة بقوليات (فول / ترمس / مكسرات)</span></div>
-        <input type="checkbox">
-    </div>
-    <div class="item">
-        <div class="text-section"><span class="title">كوب لبن رايب</span></div>
-        <input type="checkbox">
+    <div class="success-msg" id="congrats-screen">
+        🎉 مبروك! لقد أتممتِ برنامج الـ 90 يوماً بنجاح وقمتِ بتقوية عضلاتكِ! 🎉
     </div>
 
+    <script>
+        // نظام حفظ البيانات التلقائي في المتصفح
+        let currentDay = parseInt(localStorage.getItem('savedWorkoutDay')) || 1;
+
+        function getExercisePlan(day) {
+            // حساب رقم التعديل (كل 7 أيام يرتفع المستوى وتزيد القوة والشدة بذكاء)
+            let cycle = Math.floor((day - 1) / 7); 
+            
+            // التعديلات التدريجية بناءً على الأسابيع
+            let bicepReps = 12 + Math.min(cycle, 4); // تبدأ من 12 وتصل بحد أقصى لـ 16
+            let shoulderReps = 10 + Math.min(cycle, 4); // تبدأ من 10 وتصل لـ 14
+            let extensionReps = 12 + Math.min(cycle, 4); // تبدأ من 12 وتصل لـ 16
+            let gluteHold = 3 + Math.min(cycle, 5); // يزيد وقت الثبات من 3 ثوانٍ إلى 8 ثوانٍ
+
+            let levelName = `المستوى ${cycle + 1}: الشدة +${cycle * 5}%`;
+            if (cycle === 0) levelName = "الأسبوع 1: التأسيس البدني";
+            if (cycle >= 12) levelName = "الأسبوع الأخير: ذروة القوة العضلية";
+
+            return {
+                levelName: levelName,
+                html: `
+                    <div class="item">
+                        <div class="text-section">
+                            <span class="title">Bicep Curls (بايسبس بالوزن)</span>
+                            <span class="details">3 مجموعات × <span class="green-text">${bicepReps} تكرار</span> | راحة 45 ث</span>
+                        </div>
+                        <input type="checkbox" class="task-check" onchange="checkProgress()">
+                    </div>
+                    <div class="item">
+                        <div class="text-section">
+                            <span class="title">Shoulder Press (أكتاف من الجلوس)</span>
+                            <span class="details">3 مجموعات × <span class="green-text">${shoulderReps} تكرار</span> | راحة 45 ث</span>
+                        </div>
+                        <input type="checkbox" class="task-check" onchange="checkProgress()">
+                    </div>
+                    <div class="item">
+                        <div class="text-section">
+                            <span class="title">Seated Leg Extensions (تقوية الأفخاذ)</span>
+                            <span class="details">3 مجموعات × <span class="green-text">${extensionReps} تكرار</span> | راحة 45 ث</span>
+                        </div>
+                        <input type="checkbox" class="task-check" onchange="checkProgress()">
+                    </div>
+                    <div class="item">
+                        <div class="text-section">
+                            <span class="title">Glute Squeezes (عصر الجلوتس)</span>
+                            <span class="details">3 مجموعات × 15 تكرار | <span class="green-text">ثبات ${gluteHold} ثوانٍ</span></span>
+                        </div>
+                        <input type="checkbox" class="task-check" onchange="checkProgress()">
+                    </div>
+                `
+            };
+        }
+
+        function loadDay() {
+            if (currentDay > 90) {
+                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('congrats-screen').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('current-day').innerText = currentDay;
+            let plan = getExercisePlan(currentDay);
+            document.getElementById('level-text').innerText = plan.levelName;
+            document.getElementById('exercises-container').innerHTML = plan.html;
+            
+            // إعادة تصفير الاختيارات لليوم الجديد
+            let checkboxes = document.querySelectorAll('.task-check');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+                cb.parentElement.classList.remove('completed');
+            });
+            checkProgress();
+        }
+
+        function checkProgress() {
+            let checkboxes = document.querySelectorAll('.task-check');
+            let allChecked = true;
+            
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    cb.parentElement.classList.add('completed');
+                } else {
+                    cb.parentElement.classList.remove('completed');
+                    allChecked = false;
+                }
+            });
+            
+            document.getElementById('submit-btn').disabled = !allChecked;
+        }
+
+        function nextDay() {
+            currentDay++;
+            localStorage.setItem('savedWorkoutDay', currentDay);
+            loadDay();
+            window.scrollTo(0, 0);
+        }
+
+        // تشغيل البرنامج لأول مرة عند فتح الصفحة
+        loadDay();
+    </script>
 </body>
 </html>
